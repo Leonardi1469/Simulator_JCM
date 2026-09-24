@@ -1,8 +1,8 @@
 # Simulator JCM
 
-An interactive educational application for the closed Jaynesâ€“Cummings model, built with [Streamlit](https://streamlit.io/) and [QuTiP](https://qutip.org/). Choose a two-level atom and a single-mode cavity field, inspect their time evolution, explore individual instants with a time slider, and generate a playable MP4 animation. Figures can be downloaded for teaching or scientific writing.
+An interactive educational application for the closed Jaynes-Cummings model, built with [Streamlit](https://streamlit.io/) and [QuTiP](https://qutip.org/). Choose a two-level atom and a single-mode cavity field, inspect their time evolution, explore individual instants with a time slider, and generate a playable MP4 animation. Figures can be downloaded for teaching or scientific writing.
 
-This expanded research version builds on the simulator associated with Emily Andrea Franco Escudero's undergraduate thesis, *Design and implementation of JC Simulator: an interactive simulator for the Jaynesâ€“Cummings model*. The [thesis repository](https://github.com/Leonardi1469/JC-Simulator) remains separate; this repository is for the subsequent article.
+This expanded research version builds on the simulator associated with Emily Andrea Franco Escudero's undergraduate thesis, *Design and implementation of JC Simulator: an interactive simulator for the Jaynes-Cummings model*. The [thesis repository](https://github.com/Leonardi1469/JC-Simulator) remains separate; this repository is for the subsequent article.
 
 ## Model and physical assumptions
 
@@ -24,11 +24,11 @@ The model contains **one atom, one field mode, and no cavity losses, spontaneous
 | Group | Choices or meaning |
 | --- | --- |
 | Physical parameters | Cavity frequency $\omega_c$, atomic transition frequency $\omega_{eg}$, coupling $g$. |
-| Atomic state | Excited $|e\rangle$, ground $|g\rangle$, or $\cos(\theta/2)|e\rangle+e^{i\phi}\sin(\theta/2)|g\rangle$. |
-| Field state | Vacuum, Fock $|n_0\rangle$, coherent $|\alpha\rangle$, squeezed vacuum $S(r)|0\rangle$, or displaced squeezed vacuum $D(\alpha)S(r)|0\rangle$. The interface uses real $\alpha$ and $r$. |
+| Atomic state | Excited $\lvert e\rangle$, ground $\lvert g\rangle$, or $\cos(\theta/2)\lvert e\rangle+e^{i\phi}\sin(\theta/2)\lvert g\rangle$. |
+| Field state | Vacuum, Fock $\lvert n_0\rangle$, coherent $\lvert\alpha\rangle$, squeezed vacuum $S(r)\lvert 0\rangle$, or displaced squeezed vacuum $D(\alpha)S(r)\lvert 0\rangle$. The interface uses real $\alpha$ and $r$. |
 | Numerical parameters | Fock dimension $N$ (levels $0,\ldots,N-1$), final time $t_{\max}$, and $N_t$ sampled output times. |
 
-The simulation calculates atomic populations $P_e(t)$ and $P_g(t)$, inversion $W(t)=P_e-P_g$, mean photon number $\langle n\rangle$, atomic reduced-state von Neumann entropy in bits, and total-excitation mean $\langle M\rangle=\langle n+|e\rangle\langle e|\rangle$. It also shows the photon distribution $P_n(t)$, Mandel parameter $Q=[\langle n(n-1)\rangle-\langle n\rangle^2]/\langle n\rangle$, and equal-time $g^{(2)}(0,t)=\langle n(n-1)\rangle/\langle n\rangle^2$. Values of $Q$ and $g^{(2)}$ are undefined when their denominators vanish. The statistics describe the single-mode field at each time, not two-time correlations.
+The simulation calculates atomic populations $P_e(t)$ and $P_g(t)$, inversion $W(t)=P_e(t)-P_g(t)$, mean photon number $\langle n(t)\rangle$, atomic reduced-state von Neumann entropy in bits, and total-excitation mean $\langle M(t)\rangle=\langle n(t)\rangle+P_e(t)$. It also shows the photon distribution $P_n(t)$, Mandel parameter $Q(t)=[\langle n(n-1)\rangle-\langle n\rangle^2]/\langle n\rangle$, and equal-time $g^{(2)}(0,t)=\langle n(n-1)\rangle/\langle n\rangle^2$. Values of $Q$ and $g^{(2)}$ are undefined when their denominators vanish. The statistics describe the single-mode field at each time, not two-time correlations.
 
 Conservation of $\langle M\rangle$ provides an internal check. The app warns if the highest retained Fock level becomes appreciably populated. Increase $N$ and compare results to check truncation convergence, particularly for squeezed and highly populated states. Increasing $N_t$ adds sampled times; it does **not** by itself control integrator error or demonstrate convergence.
 
@@ -53,7 +53,7 @@ python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-On Windows, replace `source .venv/bin/activate` with `.venv\Scripts\activate`.
+On Windows Command Prompt, use `.venv\Scripts\activate.bat` instead of `source .venv/bin/activate`. In PowerShell, use `.\.venv\Scripts\Activate.ps1`.
 
 The video renderer uses `imageio-ffmpeg`, which bundles an executable; a separate system FFmpeg installation is not required. If video generation fails on a particular host, the static figures, data export, and time slider remain available.
 
