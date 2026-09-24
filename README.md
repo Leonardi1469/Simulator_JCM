@@ -75,5 +75,3 @@ As a reference case, choose $\omega_c=\omega_{eg}=1$, $g=0.05$, an initially exc
 
 The application code is contained in `app.py`; dependencies are listed in `requirements.txt`. This repository currently has no license.
 The video renderer uses `imageio-ffmpeg`, which bundles an executable; a separate system FFmpeg installation is not required. If video generation fails on a particular host, the static figures, data export, and time slider remain available.
-
-All application logic is in **one `app.py`**. `requirements.txt` supplies dependencies and `.gitignore` excludes temporary files. This repository currently has **no license**: public visibility alone does not grant permission to redistribute or adapt its code.
