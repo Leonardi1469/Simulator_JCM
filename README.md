@@ -1,50 +1,62 @@
 # Simulator JCM
 
-An interactive educational application for the closed Jaynes-Cummings model, built with [Streamlit](https://streamlit.io/) and [QuTiP](https://qutip.org/). Choose a two-level atom and a single-mode cavity field, inspect their time evolution, explore individual instants with a time slider, and generate a playable MP4 animation. Figures can be downloaded for teaching or scientific writing.
+This repository contains a Streamlit application for the numerical study of the Jaynes-Cummings model. The program solves the Schrodinger equation with QuTiP for a two-level atom interacting with a single cavity mode. The initial state and model parameters can be selected through the interface, and the calculated observables can be inspected as functions of time.
 
-This expanded research version builds on the simulator associated with Emily Andrea Franco Escudero's undergraduate thesis, *Design and implementation of JC Simulator: an interactive simulator for the Jaynes-Cummings model*. The [thesis repository](https://github.com/Leonardi1469/JC-Simulator) remains separate; this repository is for the subsequent article.
+The application is an extended version of the simulator developed in connection with Emily Andrea Franco Escudero's undergraduate thesis, *Design and implementation of JC Simulator: an interactive simulator for the Jaynes-Cummings model*. The version associated with the thesis is kept in a [separate repository](https://github.com/Leonardi1469/JC-Simulator).
 
-## Model and physical assumptions
+## Physical model
 
-In units with $\hbar=1$, the Hamiltonian is
+In units where $\hbar=1$, the Hamiltonian is
 
 $$
 H=\omega_c a^\dagger a+\frac{\omega_{eg}}{2}\sigma_z
-  +g\left(a\sigma_+ + a^\dagger\sigma_-\right).
+  +g\left(a\sigma_+ +a^\dagger\sigma_-\right).
 $$
 
-The first term is the cavity-mode energy, the second is the two-level atom energy, and the last exchanges one excitation between the atom and field. $a$ annihilates a photon, $a^\dagger$ creates one, and $\sigma_+$ and $\sigma_-$ raise and lower the atom. The detuning is $\Delta=\omega_{eg}-\omega_c$. All frequencies and $g$ must use the same angular-frequency unit; time uses its inverse.
+The first term describes the cavity field, the second describes the two-level atom, and the last accounts for the exchange of one excitation between them. The parameters $\omega_c$, $\omega_{eg}$, and $g$ are the cavity frequency, atomic transition frequency, and coupling constant, respectively. The operators $a$ and $a^\dagger$ annihilate and create a cavity photon, while $\sigma_+$ and $\sigma_-$ raise and lower the atomic state. The detuning is $\Delta=\omega_{eg}-\omega_c$.
 
-This Hamiltonian uses the **rotating-wave approximation** (RWA): the counter-rotating terms $a\sigma_-$ and $a^\dagger\sigma_+$ are omitted. A useful near-resonant regime has $|\Delta|/(\omega_c+\omega_{eg})\ll1$ and $g\sqrt{n+1}/(\omega_c+\omega_{eg})\ll1$ for photon numbers appreciably occupied during the evolution. The app displays estimates using the initial mean photon number and warns when an illustrative ratio reaches 0.1. This threshold is a teaching aid, not a universal boundary. Outside that regime, the program still solves the JC Hamiltonian, but its interpretation as an approximation to a particular physical system requires care.
+The Hamiltonian is written in the rotating-wave approximation (RWA), which neglects the counter-rotating terms $a\sigma_-$ and $a^\dagger\sigma_+$. The approximation is appropriate when the coupling is small compared with $\omega_c+\omega_{eg}$ for the photon numbers involved in the dynamics. Near resonance, the detuning should also be small compared with this sum. The interface reports the ratios $|\Delta|/(\omega_c+\omega_{eg})$ and $g\sqrt{\langle n(0)\rangle+1}/(\omega_c+\omega_{eg})$ as an initial guide. A warning is displayed when either ratio is at least 0.1; this value is indicative and does not define a strict validity limit. Since the photon distribution evolves, the user should also consider the photon numbers populated at later times.
 
-The model contains **one atom, one field mode, and no cavity losses, spontaneous emission, or thermal bath**. It does not solve the full quantum Rabi Hamiltonian or a dissipative master equation.
+The model assumes a closed system. Cavity losses, spontaneous emission, thermal effects, and counter-rotating interactions are not included. All frequencies and $g$ must be entered in the same angular-frequency units; time is expressed in the inverse unit.
 
-## Inputs and observables
+## Initial states and numerical parameters
 
-| Group | Choices or meaning |
-| --- | --- |
-| Physical parameters | Cavity frequency $\omega_c$, atomic transition frequency $\omega_{eg}$, coupling $g$. |
-| Atomic state | Excited $\lvert e\rangle$, ground $\lvert g\rangle$, or $\cos(\theta/2)\lvert e\rangle+e^{i\phi}\sin(\theta/2)\lvert g\rangle$. |
-| Field state | Vacuum, Fock $\lvert n_0\rangle$, coherent $\lvert\alpha\rangle$, squeezed vacuum $S(r)\lvert 0\rangle$, or displaced squeezed vacuum $D(\alpha)S(r)\lvert 0\rangle$. The interface uses real $\alpha$ and $r$. |
-| Numerical parameters | Fock dimension $N$ (levels $0,\ldots,N-1$), final time $t_{\max}$, and $N_t$ sampled output times. |
+The atom can start in $\lvert e\rangle$, $\lvert g\rangle$, or the superposition
 
-The simulation calculates atomic populations $P_e(t)$ and $P_g(t)$, inversion $W(t)=P_e(t)-P_g(t)$, mean photon number $\langle n(t)\rangle$, atomic reduced-state von Neumann entropy in bits, and total-excitation mean $\langle M(t)\rangle=\langle n(t)\rangle+P_e(t)$. It also shows the photon distribution $P_n(t)$, Mandel parameter $Q(t)=[\langle n(n-1)\rangle-\langle n\rangle^2]/\langle n\rangle$, and equal-time $g^{(2)}(0,t)=\langle n(n-1)\rangle/\langle n\rangle^2$. Values of $Q$ and $g^{(2)}$ are undefined when their denominators vanish. The statistics describe the single-mode field at each time, not two-time correlations.
+$$
+\lvert\psi_a(0)\rangle=
+\cos(\theta/2)\lvert e\rangle+
+e^{i\phi}\sin(\theta/2)\lvert g\rangle.
+$$
 
-Conservation of $\langle M\rangle$ provides an internal check. The app warns if the highest retained Fock level becomes appreciably populated. Increase $N$ and compare results to check truncation convergence, particularly for squeezed and highly populated states. Increasing $N_t$ adds sampled times; it does **not** by itself control integrator error or demonstrate convergence.
+The initial field can be vacuum, a Fock state $\lvert n_0\rangle$, a coherent state $\lvert\alpha\rangle$, a squeezed vacuum $S(r)\lvert0\rangle$, or a displaced squeezed vacuum $D(\alpha)S(r)\lvert0\rangle$. In the current interface, $\alpha$ and $r$ are real. The order of $D(\alpha)$ and $S(r)$ is part of the definition of the last state.
 
-## Use
+The numerical parameters are the Fock-space dimension $N$, final time $t_{\max}$, and number of sampled times $N_t$. The field basis contains $\lvert0\rangle,\ldots,\lvert N-1\rangle$. When the highest retained level acquires a noticeable population, the program displays a warning. Results should be checked by repeating the calculation with a larger $N$, particularly for coherent and squeezed states. Increasing $N_t$ provides more output points but does not, by itself, establish the accuracy of the differential-equation solver.
 
-1. Set the physical and numerical parameters, then select the initial states.
-2. Read the RWA scale estimates and any truncation warning. Click **Run simulation**.
-3. Inspect the curves and photon-distribution map. Drag **Inspect time** to compare atom populations with the instantaneous photon-number distribution.
-4. Click **Generate MP4 video** for an animation of those populations and the developing inversion curve. The embedded video has playback controls and a download button. It uses at most 90 evenly spaced frames from the existing solution; it does not solve the equation again.
-5. Download the six-panel figure as PDF or PNG, the photon map as PNG, or the sampled data as CSV. Exports correspond to the most recent run. The PDF is a figure, not a parameter report.
+## Calculated quantities
 
-A validation case is $\omega_c=\omega_{eg}=1$, $g=0.05$, initially excited atom, and vacuum field. Analytically, $P_e(t)=\cos^2(gt)$ and $\langle M\rangle=1$. Use a sufficiently long interval to see an oscillation. For a coherent field, repeat with larger $N$ before interpreting collapse-and-revival behavior.
+The main figure contains six time-dependent quantities:
 
-## Local installation
+1. Excited-state probability $P_e(t)$.
+2. Ground-state probability $P_g(t)$.
+3. Atomic inversion $W(t)=P_e(t)-P_g(t)$.
+4. Mean photon number $\langle n(t)\rangle$.
+5. Von Neumann entropy of the reduced atomic state $S_A(t)$, in bits.
+6. Mean total number of excitations $\langle M(t)\rangle=\langle n(t)\rangle+P_e(t)$.
 
-Use Python 3.11 or newer and install the pinned dependencies:
+The application also displays the photon-number distribution $P_n(t)$ and the field statistics
+
+$$
+Q(t)=\frac{\langle n(n-1)\rangle-\langle n\rangle^2}{\langle n\rangle},
+\qquad
+g^{(2)}(0,t)=\frac{\langle n(n-1)\rangle}{\langle n\rangle^2}.
+$$
+
+These quantities are undefined when their denominators vanish. The displayed $g^{(2)}(0,t)$ is an equal-time field statistic, not a two-time correlation function. For the closed Jaynes-Cummings Hamiltonian, $\langle M(t)\rangle$ is conserved; the program reports its maximum numerical variation as a consistency check. This check does not replace a convergence study in $N$.
+
+## Running the application
+
+Install the dependencies with Python 3.11 or newer, then start Streamlit:
 
 ```bash
 python -m venv .venv
@@ -53,8 +65,15 @@ python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-On Windows Command Prompt, use `.venv\Scripts\activate.bat` instead of `source .venv/bin/activate`. In PowerShell, use `.\.venv\Scripts\Activate.ps1`.
+In Windows Command Prompt, replace the activation command with `.venv\Scripts\activate.bat`. In PowerShell, use `.\.venv\Scripts\Activate.ps1`.
 
+Set the parameters and initial states, then select **Run simulation**. The **Inspect time** slider shows the atomic populations and photon distribution at a selected sample without solving the equation again. Select **Generate MP4 video** to produce a video of the evolving inversion, atomic populations, and photon distribution. The video can be played in the application or downloaded. It contains at most 90 frames selected from the calculated time points. MP4 encoding uses the executable provided by `imageio-ffmpeg`.
+
+The six-panel figure is available in PDF and PNG, the photon-distribution map in PNG, and the sampled observables in CSV. The exports correspond to the most recent run. The PDF contains the figure rather than a report of the input parameters; the CSV records those parameters in its header.
+
+As a reference case, choose $\omega_c=\omega_{eg}=1$, $g=0.05$, an initially excited atom, and a vacuum field. The analytical result is $P_e(t)=\cos^2(gt)$ and $\langle M(t)\rangle=1$. A sufficiently long time interval is needed to observe an oscillation.
+
+The application code is contained in `app.py`; dependencies are listed in `requirements.txt`. This repository currently has no license.
 The video renderer uses `imageio-ffmpeg`, which bundles an executable; a separate system FFmpeg installation is not required. If video generation fails on a particular host, the static figures, data export, and time slider remain available.
 
 All application logic is in **one `app.py`**. `requirements.txt` supplies dependencies and `.gitignore` excludes temporary files. This repository currently has **no license**: public visibility alone does not grant permission to redistribute or adapt its code.
