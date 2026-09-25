@@ -1,4 +1,4 @@
-"""Interactive, closed Jaynes–Cummings siulator (single-file Streamlit app)."""
+"""Interactive, closed Jaynes–Cummings simulator (single-file Streamlit app)."""
 
 from __future__ import annotations
 
