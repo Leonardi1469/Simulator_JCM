@@ -71,6 +71,4 @@ Set the parameters and initial states, then select **Run simulation**. Select **
 
 The six-panel figure is available in PDF and PNG, and the sampled observables and probabilities $P_n(t)$ are available in CSV. The exports correspond to the most recent run. The PDF contains the figure rather than a report of the input parameters; the CSV records those parameters in its header.
 
-As a reference case, choose $\omega_c=\omega_{eg}=1$, $g=0.05$, an initially excited atom, and a vacuum field. The analytical result is $P_e(t)=\cos^2(gt)$ and $\langle M(t)\rangle=1$. A sufficiently long time interval is needed to observe an oscillation.
-
 The application code is contained in `app.py`; dependencies are listed in `requirements.txt`. This repository currently has no license.
