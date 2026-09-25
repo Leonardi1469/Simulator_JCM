@@ -10,7 +10,7 @@ In units where $\hbar=1$, the Hamiltonian is
 
 $$
 H=\omega_c a^\dagger a+\frac{\omega_{eg}}{2}\sigma_z
-  +g\left(a\sigma_+ +a^\dagger\sigma_-\right).
+  +g\left(a\sigma_+ + a^\dagger\sigma_-\right).
 $$
 
 The first term describes the cavity field, the second describes the two-level atom, and the last accounts for the exchange of one excitation between them. The parameters $\omega_c$, $\omega_{eg}$, and $g$ are the cavity frequency, atomic transition frequency, and coupling constant, respectively. The operators $a$ and $a^\dagger$ annihilate and create a cavity photon, while $\sigma_+$ and $\sigma_-$ raise and lower the atomic state. The detuning is $\Delta=\omega_{eg}-\omega_c$.
@@ -44,7 +44,7 @@ The main figure contains six time-dependent quantities:
 5. Von Neumann entropy of the reduced atomic state $S_A(t)$, in bits.
 6. Mean total number of excitations $\langle M(t)\rangle=\langle n(t)\rangle+P_e(t)$.
 
-The application also displays the photon-number distribution $P_n(t)$ and the field statistics
+The photon-number distribution $P_n(t)$ is shown during the MP4 animation and recorded for every sampled time in the CSV file. The application also calculates the field statistics
 
 $$
 Q(t)=\frac{\langle n(n-1)\rangle-\langle n\rangle^2}{\langle n\rangle},
@@ -67,11 +67,10 @@ streamlit run app.py
 
 In Windows Command Prompt, replace the activation command with `.venv\Scripts\activate.bat`. In PowerShell, use `.\.venv\Scripts\Activate.ps1`.
 
-Set the parameters and initial states, then select **Run simulation**. The **Inspect time** slider shows the atomic populations and photon distribution at a selected sample without solving the equation again. Select **Generate MP4 video** to produce a video of the evolving inversion, atomic populations, and photon distribution. The video can be played in the application or downloaded. It contains at most 90 frames selected from the calculated time points. MP4 encoding uses the executable provided by `imageio-ffmpeg`.
+Set the parameters and initial states, then select **Run simulation**. Select **Generate MP4 video** to view the evolving inversion, atomic populations, and photon distribution. The video can be paused or advanced with the player controls, and it can also be downloaded. It contains at most 90 frames selected from the calculated time points. MP4 encoding uses the executable provided by `imageio-ffmpeg`.
 
-The six-panel figure is available in PDF and PNG, the photon-distribution map in PNG, and the sampled observables in CSV. The exports correspond to the most recent run. The PDF contains the figure rather than a report of the input parameters; the CSV records those parameters in its header.
+The six-panel figure is available in PDF and PNG, and the sampled observables and probabilities $P_n(t)$ are available in CSV. The exports correspond to the most recent run. The PDF contains the figure rather than a report of the input parameters; the CSV records those parameters in its header.
 
 As a reference case, choose $\omega_c=\omega_{eg}=1$, $g=0.05$, an initially excited atom, and a vacuum field. The analytical result is $P_e(t)=\cos^2(gt)$ and $\langle M(t)\rangle=1$. A sufficiently long time interval is needed to observe an oscillation.
 
 The application code is contained in `app.py`; dependencies are listed in `requirements.txt`. This repository currently has no license.
-The video renderer uses `imageio-ffmpeg`, which bundles an executable; a separate system FFmpeg installation is not required. If video generation fails on a particular host, the static figures, data export, and time slider remain available.
