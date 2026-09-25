@@ -7,6 +7,7 @@ The application is an extended version of the simulator developed in connection 
 ## Physical model
 
 In units where $\hbar=1$, the Hamiltonian is
+
 $$
 H=\omega_c a^\dagger a+\frac{\omega_{eg}}{2}\sigma_z
   +g\left(a\sigma_+ + a^\dagger\sigma_-\right).
